@@ -129,7 +129,7 @@ class UserBookAdmin(admin.ModelAdmin):
         'user', 'book', 'status', 'current_page',
         'get_reading_progress', 'date_added'
     ]
-    list_filter = ['status', 'date_added', 'date_started', 'date_finished']
+    list_filter = ['status', 'date_added', 'date_started', 'date_ended']
     search_fields = ['user__username', 'book__title']
     readonly_fields = ['date_added']
 
@@ -138,7 +138,7 @@ class UserBookAdmin(admin.ModelAdmin):
             'fields': ('user', 'book', 'status')
         }),
         ('پیشرفت خواندن', {
-            'fields': ('current_page', 'date_started', 'date_finished')
+            'fields': ('current_page', 'date_started', 'date_ended')
         }),
         ('یادداشت‌ها', {
             'fields': ('notes',)

@@ -34,7 +34,7 @@ class CustomUserAdmin(UserAdmin):
         }),
         ('تنظیمات حریم خصوصی', {
             'fields': (
-                'profile_picture', 'show_email'
+                'profile_is_public', 'show_email'
             )
         }),
         ('آمار', {
