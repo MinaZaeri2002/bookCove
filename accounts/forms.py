@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth import authenticate
+from django.contrib.auth.forms import AuthenticationForm
 from .models import CustomUser
 
 
@@ -70,19 +71,19 @@ class UserProfileForm(forms.ModelForm):
         }
 
 
-class LoginForm(forms.Form):
+class LoginForm(AuthenticationForm):
     username = forms.CharField(
         max_length=150,
         widget=forms.TextInput(attrs={
             'class': 'form-control',
-            'placeholder': 'نام کاربری یا ایمیل'
+            'placeholder': ''
         })
     )
 
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={
             'class': 'form-control',
-            'placeholder': 'رمز عبور'
+            'placeholder': ''
         })
     )
 
@@ -91,22 +92,3 @@ class LoginForm(forms.Form):
         widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}),
     )
 
-    def clean(self):
-        username = self.cleaned_data.get('username')
-        password = self.cleaned_data.get('password')
-
-        if username and password:
-            if '@' in username:
-                try:
-                    user_obj = CustomUser.objects.get(email=username)
-                    username = user_obj.username
-                except CustomUser.DoesNotExist:
-                    raise forms.ValidationError('کاربری با این ایمیل پیدا نشد.')
-
-            user = authenticate(username=username, password=password)
-            if not user:
-                raise forms.ValidationError('نام کاربری یا رمزعبور اشتباه است.')
-            elif not user.is_active:
-                raise forms.ValidationError('حساب کاربری شما غیر فعال است.')
-
-        return self.cleaned_data
