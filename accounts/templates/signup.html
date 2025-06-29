@@ -1,0 +1,207 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ثبت نام - BookCove</title>
+    <link rel="stylesheet" href="{% static "signup.css" %}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="signup-wrapper">
+            <!-- Left Side - Branding -->
+            <div class="branding-section">
+                <div class="brand-content">
+                    <div class="logo">
+                        <i class="fas fa-book-open"></i>
+                        <h1>BookCove</h1>
+                    </div>
+                    <h2>به دنیای کتاب‌ها خوش آمدید</h2>
+                    <p>هزاران کتاب در انتظار کشف شدن توسط شما</p>
+                    <div class="features">
+                        <div class="feature">
+                            <i class="fas fa-star"></i>
+                            <span>بررسی و امتیازدهی کتاب‌ها</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-users"></i>
+                            <span>جامعه فعال کتابخوانان</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-bookmark"></i>
+                            <span>ذخیره کتاب‌های مورد علاقه</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side - Form -->
+            <div class="form-section">
+                <div class="form-container">
+                    <div class="form-header">
+                        <h3>ایجاد حساب کاربری</h3>
+                        <p>اطلاعات خود را وارد کنید</p>
+                    </div>
+
+                    <form method="post" class="signup-form">
+                        {% csrf_token %}
+
+                        <div class="form-group">
+                            <div class="input-group">
+                                <i class="fas fa-user"></i>
+                                {{ form.username }}
+                                <label for="{{ form.username.id_for_label }}">نام کاربری</label>
+                            </div>
+                            {% if form.username.errors %}
+                                <div class="error-message">
+                                    {% for error in form.username.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group half">
+                                <div class="input-group">
+                                    <i class="fas fa-user-tag"></i>
+                                    {{ form.first_name }}
+                                    <label for="{{ form.first_name.id_for_label }}">نام</label>
+                                </div>
+                            </div>
+                            <div class="form-group half">
+                                <div class="input-group">
+                                    <i class="fas fa-user-friends"></i>
+                                    {{ form.last_name }}
+                                    <label for="{{ form.last_name.id_for_label }}">نام خانوادگی</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="input-group">
+                                <i class="fas fa-envelope"></i>
+                                {{ form.email }}
+                                <label for="{{ form.email.id_for_label }}">آدرس ایمیل</label>
+                            </div>
+                            {% if form.email.errors %}
+                                <div class="error-message">
+                                    {% for error in form.email.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <div class="input-group">
+                                <i class="fas fa-lock"></i>
+                                {{ form.password1 }}
+                                <label for="{{ form.password1.id_for_label }}">رمز عبور</label>
+                                <button type="button" class="toggle-password" onclick="togglePassword('{{ form.password1.id_for_label }}')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            {% if form.password1.errors %}
+                                <div class="error-message">
+                                    {% for error in form.password1.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <div class="input-group">
+                                <i class="fas fa-lock"></i>
+                                {{ form.password2 }}
+                                <label for="{{ form.password2.id_for_label }}">تکرار رمز عبور</label>
+                                <button type="button" class="toggle-password" onclick="togglePassword('{{ form.password2.id_for_label }}')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            {% if form.password2.errors %}
+                                <div class="error-message">
+                                    {% for error in form.password2.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label class="checkbox-container">
+                                <input type="checkbox" required>
+                                <span class="checkmark"></span>
+                                <span class="checkbox-text">
+                                    با <a href="#" class="terms-link">قوانین و مقررات</a> موافقم
+                                </span>
+                            </label>
+                        </div>
+
+                        <button type="submit" class="submit-btn">
+                            <span>ایجاد حساب کاربری</span>
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+
+                        <div class="form-footer">
+                            <p>
+                                قبلاً حساب دارید؟
+                                <a href="{% url 'login' %}" class="login-link">وارد شوید</a>
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const button = input.parentElement.querySelector('.toggle-password i');
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                button.classList.remove('fa-eye');
+                button.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                button.classList.remove('fa-eye-slash');
+                button.classList.add('fa-eye');
+            }
+        }
+
+        // Form validation and animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('.input-group input');
+
+            inputs.forEach(input => {
+                // Handle floating labels
+                if (input.value) {
+                    input.classList.add('has-value');
+                }
+
+                input.addEventListener('input', function() {
+                    if (this.value) {
+                        this.classList.add('has-value');
+                    } else {
+                        this.classList.remove('has-value');
+                    }
+                });
+
+                input.addEventListener('focus', function() {
+                    this.parentElement.classList.add('focused');
+                });
+
+                input.addEventListener('blur', function() {
+                    this.parentElement.classList.remove('focused');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
