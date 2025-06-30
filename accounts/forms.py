@@ -70,6 +70,22 @@ class UserProfileForm(forms.ModelForm):
             'show_email': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
 
+    def clean_phone_number(self):
+        phone = self.cleaned_data.get('phone_number')
+        if phone and not phone.isdigit():
+            raise forms.ValidationError('شماره تلفن باید فقط شامل اعداد باشد.')
+        if phone and len(phone) != 11:
+            raise forms.ValidationError('شماره تلفن باید 11 رقم باشد.')
+        return phone
+
+    def clean_yearly_reading_goal(self):
+        goal = self.cleaned_data.get('yearly_reading_goal')
+        if goal and goal < 1:
+            raise forms.ValidationError('هدف مطالعه باید حداقل 1 کتاب باشد.')
+        if goal and goal > 365:
+            raise forms.ValidationError('هدف مطالعه نمی‌تواند بیشتر از 365 کتاب باشد.')
+        return goal
+
 
 class LoginForm(AuthenticationForm):
     username = forms.CharField(

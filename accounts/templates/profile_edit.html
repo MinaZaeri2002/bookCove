@@ -1,0 +1,124 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ویرایش پروفایل - {{ form.instance.get_full_name_or_username }}</title>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'profile_detail.css' %}">
+    <link rel="stylesheet" href="{% static 'profile_edit.css' %}">
+</head>
+<body>
+    <div class="profile-container">
+        <div class="profile-header">
+            <div class="profile-avatar">
+                <img src="{{ form.instance.profile_picture.url }}" alt="Profile Picture" id="avatar-preview">
+            </div>
+            <h1 class="profile-title">{{ form.instance.get_full_name_or_username }}</h1>
+            <p class="profile-subtitle">@{{ form.instance.username }}</p>
+        </div>
+
+        <div class="form-container">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <i class="fas fa-check-circle me-2"></i>
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            {% if form.errors %}
+                <div class="alert alert-danger" role="alert">
+                    لطفاً خطاهای فرم را برطرف کنید.
+                </div>
+            {% endif %}
+
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="profile-content" style="grid-template-columns: 1fr 300px; gap: 2rem;">
+
+                    <div class="main-content">
+                        <div class="form-section">
+                            <h3 class="section-title"><i class="fas fa-user"></i> اطلاعات شخصی</h3>
+                            <div class="row">
+                                <div class="col-md-6 form-group">{{ form.first_name.label_tag }} {{ form.first_name }}</div>
+                                <div class="col-md-6 form-group">{{ form.last_name.label_tag }} {{ form.last_name }}</div>
+                            </div>
+                             <div class="form-group">{{ form.email.label_tag }} {{ form.email }}</div>
+                             <div class="form-group">{{ form.phone_number.label_tag }} {{ form.phone_number }}</div>
+                             <div class="form-group">{{ form.birth_date.label_tag }} {{ form.birth_date }}</div>
+                             <div class="form-group">{{ form.bio.label_tag }} {{ form.bio }}</div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3 class="section-title"><i class="fas fa-camera"></i> عکس پروفایل</h3>
+                            <div class="form-group file-upload-wrapper">
+                                 {{ form.profile_picture }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sidebar">
+                         <div class="form-section">
+                            <h3 class="section-title"><i class="fas fa-share-alt"></i> شبکه‌های اجتماعی</h3>
+                             <div class="form-group">{{ form.website.label_tag }} {{ form.website }}</div>
+                             <div class="form-group">{{ form.instagram.label_tag }} {{ form.instagram }}</div>
+                             <div class="form-group">{{ form.telegram.label_tag }} {{ form.telegram }}</div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3 class="section-title"><i class="fas fa-target"></i> اهداف مطالعه</h3>
+                             <div class="form-group">{{ form.yearly_reading_goal.label_tag }} {{ form.yearly_reading_goal }}</div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3 class="section-title"><i class="fas fa-lock"></i> تنظیمات حریم شخصی</h3>
+                            <div class="form-group form-check">{{ form.profile_is_public }} {{ form.profile_is_public.label_tag }}</div>
+                            <div class="form-group form-check">{{ form.show_email }} {{ form.show_email.label_tag }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-3 justify-content-end mt-4">
+                    <a href="{% url 'accounts:user_profile' username=form.instance.username %}" class="btn btn-secondary">
+                        <i class="fas fa-times me-2"></i>انصراف
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-2"></i>ذخیره تغییرات
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {# لینک به فایل‌های JS #}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('id_profile_picture').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('avatar-preview').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    setTimeout(() => {
+        document.querySelectorAll('.alert.show').forEach(alert => {
+            // Use Bootstrap's built-in dismiss method if available
+            const bsAlert = new bootstrap.Alert(alert);
+            bsAlert.close();
+        });
+    }, 5000);
+    </script>
+</body>
+</html>

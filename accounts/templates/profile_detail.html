@@ -1,0 +1,209 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پروفایل {{ profile_user.get_full_name_or_username }}</title>
+    <link rel="stylesheet" href="{% static 'profile_detail.css' %}">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    {% if can_view_profile %}
+    <div class="profile-container">
+        <div class="profile-header">
+            <div class="header-background"></div>
+            <div class="profile-info">
+                <div class="avatar-container">
+                    <div class="profile-avatar">
+                        <img src="{{ profile_user.profile_picture.url }}" alt="Profile Picture">
+                    </div>
+                    <div class="basic-info">
+                        <h1 class="profile-name">{{ profile_user.get_full_name_or_username }}</h1>
+                        <p class="profile-username">@{{ profile_user.username }}</p>
+                        <div class="profile-meta">
+                            <span class="meta-item">
+                                <i class="fas fa-calendar-alt"></i>
+                                عضو از {{ profile_user.created_at|date:"F Y" }}
+                            </span>
+                            {% if profile_user.birth_date %}
+                            <span class="meta-item">
+                                <i class="fas fa-birthday-cake"></i>
+                                {{ profile_user.birth_date|date:"j F" }}
+                            </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                {% if is_own_profile %}
+                <div class="action-buttons">
+                    <a href="{% url 'accounts:user_profile_update' username=user_profile.username %}" class="btn btn-primary">
+                        <i class="fas fa-edit"></i>
+                        ویرایش پروفایل
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="profile-content">
+            <div class="main-content">
+                <div class="content-card">
+                    <div class="card-header">
+                        <i class="fas fa-user"></i>
+                        <h3>درباره {{ profile_user.get_full_name_or_username }}</h3>
+                    </div>
+                    <div class="card-content">
+                        {% if profile_user.bio %}
+                            <p class="bio-text">{{ profile_user.bio|linebreaks }}</p>
+                        {% else %}
+                            <div class="bio-empty">
+                                <i class="fas fa-user-edit"></i>
+                                <p>هنوز اطلاعاتی درباره خود ننوشته است.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <div class="card-header">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>فعالیت مطالعه</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="progress-container">
+                            <div class="progress-header">
+                                <span class="progress-title">پیشرفت مطالعه امسال</span>
+                                <span class="progress-text">{{ user_profile.books_read_count }} از {{ user_profile.yearly_reading_goal }}</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" style="width: {{ user_profile.get_reading_progress }}%"></div>
+                            </div>
+                        </div>
+
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <span class="stat-number">{{ user_profile.books_read_count }}</span>
+                                <span class="stat-label">کتاب خوانده شده</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">{{ user_profile.reviews_count }}</span>
+                                <span class="stat-label">نقد نوشته شده</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">{{ user_profile.yearly_reading_goal }}</span>
+                                <span class="stat-label">هدف سالانه</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <div class="content-card">
+                    <div class="card-header">
+                        <i class="fas fa-address-book"></i>
+                        <h3>اطلاعات تماس</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="contact-info">
+                            {% if user_profile.show_email %}
+                            <div class="contact-item">
+                                <i class="fas fa-envelope"></i>
+                                <span>{{ user_profile.email }}</span>
+                            </div>
+                            {% endif %}
+
+                            {% if user_profile.phone_number %}
+                            <div class="contact-item">
+                                <i class="fas fa-phone"></i>
+                                <span>{{ user_profile.phone_number }}</span>
+                            </div>
+                            {% endif %}
+
+                            {% if not user_profile.show_email and not user_profile.phone_number %}
+                            <div class="bio-empty">
+                                <i class="fas fa-user-secret"></i>
+                                <p>اطلاعات تماس خصوصی است.</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                {% if user_profile.website or user_profile.instagram or user_profile.telegram %}
+                <div class="content-card">
+                    <div class="card-header">
+                        <i class="fas fa-share-alt"></i>
+                        <h3>شبکه‌های اجتماعی</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="social-links">
+                            {% if user_profile.website %}
+                            <a href="{{ user_profile.website }}" target="_blank" class="social-link">
+                                <i class="fas fa-globe"></i>
+                                <span>وبسایت شخصی</span>
+                            </a>
+                            {% endif %}
+
+                            {% if user_profile.instagram %}
+                            <a href="https://instagram.com/{{ user_profile.instagram }}" target="_blank" class="social-link">
+                                <i class="fab fa-instagram"></i>
+                                <span>{{ user_profile.instagram }}</span>
+                            </a>
+                            {% endif %}
+
+                            {% if user_profile.telegram %}
+                            <a href="https://t.me/{{ user_profile.telegram }}" target="_blank" class="social-link">
+                                <i class="fab fa-telegram"></i>
+                                <span>{{ user_profile.telegram }}</span>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+    <div class="profile-container">
+        <div class="content-card">
+            <div class="card-content">
+                <div class="privacy-message">
+                    <i class="fas fa-lock"></i>
+                    <h3>پروفایل خصوصی</h3>
+                    <p>این کاربر پروفایل خود را خصوصی کرده است.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <script>
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        window.addEventListener('load', function() {
+            const progressBar = document.querySelector('.progress-bar');
+            if (progressBar) {
+                const targetWidth = progressBar.style.width;
+                progressBar.style.width = '0%';
+                setTimeout(() => {
+                    progressBar.style.width = targetWidth;
+                }, 500);
+            }
+        });
+    </script>
+</body>
+</html>
