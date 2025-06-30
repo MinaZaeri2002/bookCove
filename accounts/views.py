@@ -1,5 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
+from django.shortcuts import render
 from django.views.generic import CreateView, DetailView, UpdateView
 from django.urls import reverse_lazy, reverse
 from .models import CustomUser
@@ -35,8 +36,12 @@ class UserProfileEditView(LoginRequiredMixin, DetailView, UpdateView):
     def test_func(self):
         return self.request.user == self.get_object()
 
-    def get_success_url(self):
-        return reverse('profile_edit', kwargs={'username': self.object.username})
+    def form_valid(self, form):
+        form.save()
+        context = self.get_context_data()
+        context['form'] = form
+        context['success_message'] = "تغییرات با موفقیت ذخیره شد!"
+        return render(self.request, self.template_name, context)
 
 
 class UserProfileDetailView(LoginRequiredMixin, DetailView):
