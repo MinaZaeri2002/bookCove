@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ژانرهای کتاب</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'home.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="page-header">
+            <div class="header-background">
+                <div class="header-content">
+                    <h1 class="page-title">
+                        <i class="fas fa-tags"></i>
+                        ژانرهای کتاب
+                    </h1>
+                    <p class="page-subtitle">ژانرهای مختلف کتاب را کشف کنید و دنیای جدیدی از دانش را آغاز کنید</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="books-section">
+            <div class="section-header">
+                <div class="section-title-group">
+                    <i class="fas fa-tags section-icon"></i>
+                    <h2 class="section-title">همه ژانرها</h2>
+                </div>
+                <a href="{% url 'home' %}" class="view-all-btn">
+                    بازگشت به خانه
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+            </div>
+
+            <div class="featured-grid">
+                {% for genre in genres %}
+                <div class="featured-item" onclick="location.href='{% url 'book_search' %}?genre={{ genre.slug }}'">
+                    <i class="fas fa-bookmark featured-icon"></i>
+                    <h3 class="featured-title">{{ genre.name }}</h3>
+                    <p class="featured-count">{{ genre.books_count }} کتاب</p>
+                </div>
+                {% empty %}
+                <div class="no-results">
+                    <i class="fas fa-tags"></i>
+                    <h3>ژانری یافت نشد</h3>
+                    <p>هنوز ژانری اضافه نشده است</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.featured-item').forEach(item => {
+            item.addEventListener('click', function() {
+                this.style.opacity = '0.7';
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نویسندگان</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'home.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="page-header">
+            <div class="header-background">
+                <div class="header-content">
+                    <h1 class="page-title">
+                        <i class="fas fa-user-edit"></i>
+                        نویسندگان
+                    </h1>
+                    <p class="page-subtitle">نویسندگان مختلف را کشف کنید و آثار آنها را بخوانید</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="books-section">
+            <div class="section-header">
+                <div class="section-title-group">
+                    <i class="fas fa-user-edit section-icon"></i>
+                    <h2 class="section-title">همه نویسندگان</h2>
+                </div>
+                <a href="{% url 'home' %}" class="view-all-btn">
+                    بازگشت به خانه
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+            </div>
+
+            <div class="featured-grid">
+                {% for author in authors %}
+                <div class="featured-item" onclick="location.href='{% url 'book_search' %}?author={{ author.id }}'">
+                    <i class="fas fa-user-circle featured-icon"></i>
+                    <h3 class="featured-title">{{ author.first_name }} {{ author.last_name }}</h3>
+                    <p class="featured-count">{{ author.books_count }} کتاب</p>
+                </div>
+                {% empty %}
+                <div class="no-results">
+                    <i class="fas fa-user-edit"></i>
+                    <h3>نویسنده‌ای یافت نشد</h3>
+                    <p>هنوز نویسنده‌ای اضافه نشده است</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.featured-item').forEach(item => {
+            item.addEventListener('click', function() {
+                this.style.opacity = '0.7';
+            });
+        });
+    </script>
+</body>
+</html>

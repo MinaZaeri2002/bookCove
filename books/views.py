@@ -52,9 +52,9 @@ class BookSearchView(ListView):
                 Q(isbn__icontains=search_query)
             ).distinct()
 
-        gener_slug = self.request.GET.get('genre')
-        if gener_slug:
-            queryset = queryset.filter(genre__slug=gener_slug)
+        genre_slug = self.request.GET.get('genre')
+        if genre_slug:
+            queryset = queryset.filter(genre__slug=genre_slug)
 
         min_rating = self.request.GET.get('min_rating')
         if min_rating:
@@ -101,4 +101,43 @@ class BookSearchView(ListView):
             self.request.GET.get('author')
         )
 
+        genre_slug = self.request.GET.get('genre')
+        if genre_slug:
+            try:
+                genre = Genre.objects.get(slug=genre_slug)
+                context['genre_name'] = genre.name
+            except Genre.DoesNotExist:
+                pass
+
+        author_id = self.request.GET.get('author')
+        if author_id:
+            try:
+                author = Author.objects.get(id=author_id)
+                context['author_name'] = f"{author.first_name} {author.last_name}"
+            except Author.DoesNotExist:
+                pass
+
         return context
+
+
+class GenreListView(ListView):
+    model = Genre
+    template_name = 'genres.html'
+    context_object_name = 'genres'
+
+    def get_queryset(self):
+        return Genre.objects.annotate(
+            books_count=Count('books', filter=Q(books__is_active=True))
+        ).filter(books_count__gt=0).order_by('-books_count')
+
+
+
+class AuthorListView(ListView):
+    model = Author
+    template_name = 'authors.html'
+    context_object_name = 'authors'
+
+    def get_queryset(self):
+        return Author.objects.annotate(
+            books_count=Count('books', filter=Q(books__is_active=True))
+        ).filter(books_count__gt=0).order_by('-books_count')

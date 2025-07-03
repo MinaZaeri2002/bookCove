@@ -19,6 +19,8 @@
                         Book Cove
                     </h1>
                     <p class="page-subtitle">بهترین کتاب‌ها را کشف کنید و دنیای جدیدی از دانش را آغاز کنید</p>
+
+
                 </div>
             </div>
         </div>
@@ -31,7 +33,7 @@
                     <i class="fas fa-star section-icon"></i>
                     <h2 class="section-title">تازه‌ترین کتاب‌ها</h2>
                 </div>
-                <a href="#" class="view-all-btn">
+                <a href="{% url 'book_search' %}?sort_by=-created_at" class="view-all-btn">
                     مشاهده همه
                     <i class="fas fa-arrow-left"></i>
                 </a>
@@ -39,7 +41,7 @@
 
             <div class="books-grid">
                 {% for book in latest_books %}
-                <div class="book-card" onclick="location.href='{% url "books:book_detail" book.pk %}'">
+                <div class="book-card" onclick="location.href='{% url 'books:book_detail' book.pk %}'">
                     <div class="book-cover">
                         {% if book.cover_image %}
                             <img src="{{ book.cover_image.url }}" alt="{{ book.title }}">
@@ -65,18 +67,12 @@
                                 </div>
                             {% endif %}
                         </div>
-                        <div class="book-stats">
-                            <span><i class="fas fa-book-open"></i> {{ book.isbn|default:"ISBN نامشخص" }}</span>
-                            {% if book.publisher %}
-                                <span><i class="fas fa-building"></i> {{ book.publisher.name }}</span>
-                            {% endif %}
-                        </div>
                     </div>
                 </div>
                 {% empty %}
-                <div style="text-align: center; padding: 60px 20px; color: #7f8c8d; grid-column: 1 / -1;">
-                    <i class="fas fa-book" style="font-size: 3rem; color: #bdc3c7; margin-bottom: 20px;"></i>
-                    <h3 style="margin-bottom: 10px; color: #5d6d7e;">کتابی یافت نشد</h3>
+                <div class="no-results">
+                    <i class="fas fa-book"></i>
+                    <h3>کتابی یافت نشد</h3>
                     <p>هنوز کتابی اضافه نشده است</p>
                 </div>
                 {% endfor %}
@@ -89,7 +85,7 @@
                     <i class="fas fa-fire section-icon"></i>
                     <h2 class="section-title">محبوب‌ترین کتاب‌ها</h2>
                 </div>
-                <a href="#" class="view-all-btn">
+                <a href="{% url 'book_search' %}?sort_by=popular" class="view-all-btn">
                     مشاهده همه
                     <i class="fas fa-arrow-left"></i>
                 </a>
@@ -97,7 +93,7 @@
 
             <div class="books-grid">
                 {% for book in popular_books %}
-                <div class="book-card" onclick="location.href='{% url "books:book_detail" book.pk %}'">
+                <div class="book-card" onclick="location.href='{% url 'books:book_detail' book.pk %}'">
                     <div class="book-cover">
                         {% if book.cover_image %}
                             <img src="{{ book.cover_image.url }}" alt="{{ book.title }}">
@@ -123,18 +119,12 @@
                                 </div>
                             {% endif %}
                         </div>
-                        <div class="book-stats">
-                            <span><i class="fas fa-book-open"></i> {{ book.isbn|default:"ISBN نامشخص" }}</span>
-                            {% if book.publisher %}
-                                <span><i class="fas fa-building"></i> {{ book.publisher.name }}</span>
-                            {% endif %}
-                        </div>
                     </div>
                 </div>
                 {% empty %}
-                <div style="text-align: center; padding: 60px 20px; color: #7f8c8d; grid-column: 1 / -1;">
-                    <i class="fas fa-fire" style="font-size: 3rem; color: #bdc3c7; margin-bottom: 20px;"></i>
-                    <h3 style="margin-bottom: 10px; color: #5d6d7e;">کتابی یافت نشد</h3>
+                <div class="no-results">
+                    <i class="fas fa-fire"></i>
+                    <h3>کتابی یافت نشد</h3>
                     <p>هنوز کتاب محبوبی وجود ندارد</p>
                 </div>
                 {% endfor %}
@@ -147,7 +137,7 @@
                     <i class="fas fa-trophy section-icon"></i>
                     <h2 class="section-title">بهترین کتاب‌ها</h2>
                 </div>
-                <a href="#" class="view-all-btn">
+                <a href="{% url 'book_search' %}?sort_by=rating" class="view-all-btn">
                     مشاهده همه
                     <i class="fas fa-arrow-left"></i>
                 </a>
@@ -155,7 +145,7 @@
 
             <div class="books-grid">
                 {% for book in top_rated_books %}
-                <div class="book-card" onclick="location.href='{% url "books:book_detail" book.pk %}'">
+                <div class="book-card" onclick="location.href='{% url 'books:book_detail' book.pk %}'">
                     <div class="book-cover">
                         {% if book.cover_image %}
                             <img src="{{ book.cover_image.url }}" alt="{{ book.title }}">
@@ -181,18 +171,12 @@
                                 </div>
                             {% endif %}
                         </div>
-                        <div class="book-stats">
-                            <span><i class="fas fa-book-open"></i> {{ book.isbn|default:"ISBN نامشخص" }}</span>
-                            {% if book.publisher %}
-                                <span><i class="fas fa-building"></i> {{ book.publisher.name }}</span>
-                            {% endif %}
-                        </div>
                     </div>
                 </div>
                 {% empty %}
-                <div style="text-align: center; padding: 60px 20px; color: #7f8c8d; grid-column: 1 / -1;">
-                    <i class="fas fa-trophy" style="font-size: 3rem; color: #bdc3c7; margin-bottom: 20px;"></i>
-                    <h3 style="margin-bottom: 10px; color: #5d6d7e;">کتابی یافت نشد</h3>
+                <div class="no-results">
+                    <i class="fas fa-trophy"></i>
+                    <h3>کتابی یافت نشد</h3>
                     <p>هنوز کتاب امتیازی وجود ندارد</p>
                 </div>
                 {% endfor %}
@@ -205,7 +189,7 @@
                     <i class="fas fa-tags section-icon"></i>
                     <h2 class="section-title">محبوب‌ترین ژانرها</h2>
                 </div>
-                <a href="#" class="view-all-btn">
+                <a href="{% url 'genre_list' %}" class="view-all-btn">
                     مشاهده همه
                     <i class="fas fa-arrow-left"></i>
                 </a>
@@ -213,15 +197,15 @@
 
             <div class="featured-grid">
                 {% for genre in popular_genres %}
-                <div class="featured-item" onclick="location.href='{% url "books:search" %}?genre={{ genre.slug }}'">
+                <div class="featured-item" onclick="location.href='{% url 'book_search' %}?genre={{ genre.slug }}'">
                     <i class="fas fa-bookmark featured-icon"></i>
                     <h3 class="featured-title">{{ genre.name }}</h3>
                     <p class="featured-count">{{ genre.books_count }} کتاب</p>
                 </div>
                 {% empty %}
-                <div style="text-align: center; padding: 60px 20px; color: #7f8c8d; grid-column: 1 / -1;">
-                    <i class="fas fa-tags" style="font-size: 3rem; color: #bdc3c7; margin-bottom: 20px;"></i>
-                    <h3 style="margin-bottom: 10px; color: #5d6d7e;">ژانری یافت نشد</h3>
+                <div class="no-results">
+                    <i class="fas fa-tags"></i>
+                    <h3>ژانری یافت نشد</h3>
                     <p>هنوز ژانری اضافه نشده است</p>
                 </div>
                 {% endfor %}
@@ -234,7 +218,7 @@
                     <i class="fas fa-user-edit section-icon"></i>
                     <h2 class="section-title">محبوب‌ترین نویسندگان</h2>
                 </div>
-                <a href="#" class="view-all-btn">
+                <a href="{% url 'author_list' %}" class="view-all-btn">
                     مشاهده همه
                     <i class="fas fa-arrow-left"></i>
                 </a>
@@ -242,15 +226,15 @@
 
             <div class="featured-grid">
                 {% for author in popular_authors %}
-                <div class="featured-item" onclick="location.href='{% url "books:search" %}?author={{ author.id }}'">
+                <div class="featured-item" onclick="location.href='{% url 'book_search' %}?author={{ author.id }}'">
                     <i class="fas fa-user-circle featured-icon"></i>
                     <h3 class="featured-title">{{ author.first_name }} {{ author.last_name }}</h3>
                     <p class="featured-count">{{ author.books_count }} کتاب</p>
                 </div>
                 {% empty %}
-                <div style="text-align: center; padding: 60px 20px; color: #7f8c8d; grid-column: 1 / -1;">
-                    <i class="fas fa-user-edit" style="font-size: 3rem; color: #bdc3c7; margin-bottom: 20px;"></i>
-                    <h3 style="margin-bottom: 10px; color: #5d6d7e;">نویسنده‌ای یافت نشد</h3>
+                <div class="no-results">
+                    <i class="fas fa-user-edit"></i>
+                    <h3>نویسنده‌ای یافت نشد</h3>
                     <p>هنوز نویسنده‌ای اضافه نشده است</p>
                 </div>
                 {% endfor %}
@@ -259,15 +243,6 @@
     </div>
 
     <script>
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
-
         document.querySelectorAll('.view-all-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 this.style.opacity = '0.7';
