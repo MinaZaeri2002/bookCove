@@ -1,0 +1,278 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>کتابخانه - صفحه اصلی</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'home.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="page-header">
+            <div class="header-background">
+                <div class="header-content">
+                    <h1 class="page-title">
+                        <i class="fas fa-book-open"></i>
+                        Book Cove
+                    </h1>
+                    <p class="page-subtitle">بهترین کتاب‌ها را کشف کنید و دنیای جدیدی از دانش را آغاز کنید</p>
+                </div>
+            </div>
+        </div>
+
+        {% include 'book_search.html' %}
+
+        <div class="books-section">
+            <div class="section-header">
+                <div class="section-title-group">
+                    <i class="fas fa-star section-icon"></i>
+                    <h2 class="section-title">تازه‌ترین کتاب‌ها</h2>
+                </div>
+                <a href="#" class="view-all-btn">
+                    مشاهده همه
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+            </div>
+
+            <div class="books-grid">
+                {% for book in latest_books %}
+                <div class="book-card" onclick="location.href='{% url "books:book_detail" book.pk %}'">
+                    <div class="book-cover">
+                        {% if book.cover_image %}
+                            <img src="{{ book.cover_image.url }}" alt="{{ book.title }}">
+                        {% else %}
+                            <i class="fas fa-book book-cover-placeholder"></i>
+                        {% endif %}
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">{{ book.title }}</h3>
+                        <p class="book-authors">
+                            {% for author in book.authors.all %}
+                                {{ author.first_name }} {{ author.last_name }}{% if not forloop.last %}، {% endif %}
+                            {% endfor %}
+                        </p>
+                        <div class="book-meta">
+                            {% if book.genres.exists %}
+                                <span class="book-genre">{{ book.genres.first.name }}</span>
+                            {% endif %}
+                            {% if book.average_rating %}
+                                <div class="book-rating">
+                                    <i class="fas fa-star"></i>
+                                    <span>{{ book.average_rating|floatformat:1 }}</span>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="book-stats">
+                            <span><i class="fas fa-book-open"></i> {{ book.isbn|default:"ISBN نامشخص" }}</span>
+                            {% if book.publisher %}
+                                <span><i class="fas fa-building"></i> {{ book.publisher.name }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div style="text-align: center; padding: 60px 20px; color: #7f8c8d; grid-column: 1 / -1;">
+                    <i class="fas fa-book" style="font-size: 3rem; color: #bdc3c7; margin-bottom: 20px;"></i>
+                    <h3 style="margin-bottom: 10px; color: #5d6d7e;">کتابی یافت نشد</h3>
+                    <p>هنوز کتابی اضافه نشده است</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="books-section">
+            <div class="section-header">
+                <div class="section-title-group">
+                    <i class="fas fa-fire section-icon"></i>
+                    <h2 class="section-title">محبوب‌ترین کتاب‌ها</h2>
+                </div>
+                <a href="#" class="view-all-btn">
+                    مشاهده همه
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+            </div>
+
+            <div class="books-grid">
+                {% for book in popular_books %}
+                <div class="book-card" onclick="location.href='{% url "books:book_detail" book.pk %}'">
+                    <div class="book-cover">
+                        {% if book.cover_image %}
+                            <img src="{{ book.cover_image.url }}" alt="{{ book.title }}">
+                        {% else %}
+                            <i class="fas fa-book book-cover-placeholder"></i>
+                        {% endif %}
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">{{ book.title }}</h3>
+                        <p class="book-authors">
+                            {% for author in book.authors.all %}
+                                {{ author.first_name }} {{ author.last_name }}{% if not forloop.last %}، {% endif %}
+                            {% endfor %}
+                        </p>
+                        <div class="book-meta">
+                            {% if book.genres.exists %}
+                                <span class="book-genre">{{ book.genres.first.name }}</span>
+                            {% endif %}
+                            {% if book.average_rating %}
+                                <div class="book-rating">
+                                    <i class="fas fa-star"></i>
+                                    <span>{{ book.average_rating|floatformat:1 }}</span>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="book-stats">
+                            <span><i class="fas fa-book-open"></i> {{ book.isbn|default:"ISBN نامشخص" }}</span>
+                            {% if book.publisher %}
+                                <span><i class="fas fa-building"></i> {{ book.publisher.name }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div style="text-align: center; padding: 60px 20px; color: #7f8c8d; grid-column: 1 / -1;">
+                    <i class="fas fa-fire" style="font-size: 3rem; color: #bdc3c7; margin-bottom: 20px;"></i>
+                    <h3 style="margin-bottom: 10px; color: #5d6d7e;">کتابی یافت نشد</h3>
+                    <p>هنوز کتاب محبوبی وجود ندارد</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="books-section">
+            <div class="section-header">
+                <div class="section-title-group">
+                    <i class="fas fa-trophy section-icon"></i>
+                    <h2 class="section-title">بهترین کتاب‌ها</h2>
+                </div>
+                <a href="#" class="view-all-btn">
+                    مشاهده همه
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+            </div>
+
+            <div class="books-grid">
+                {% for book in top_rated_books %}
+                <div class="book-card" onclick="location.href='{% url "books:book_detail" book.pk %}'">
+                    <div class="book-cover">
+                        {% if book.cover_image %}
+                            <img src="{{ book.cover_image.url }}" alt="{{ book.title }}">
+                        {% else %}
+                            <i class="fas fa-book book-cover-placeholder"></i>
+                        {% endif %}
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">{{ book.title }}</h3>
+                        <p class="book-authors">
+                            {% for author in book.authors.all %}
+                                {{ author.first_name }} {{ author.last_name }}{% if not forloop.last %}، {% endif %}
+                            {% endfor %}
+                        </p>
+                        <div class="book-meta">
+                            {% if book.genres.exists %}
+                                <span class="book-genre">{{ book.genres.first.name }}</span>
+                            {% endif %}
+                            {% if book.average_rating %}
+                                <div class="book-rating">
+                                    <i class="fas fa-star"></i>
+                                    <span>{{ book.average_rating|floatformat:1 }}</span>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="book-stats">
+                            <span><i class="fas fa-book-open"></i> {{ book.isbn|default:"ISBN نامشخص" }}</span>
+                            {% if book.publisher %}
+                                <span><i class="fas fa-building"></i> {{ book.publisher.name }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div style="text-align: center; padding: 60px 20px; color: #7f8c8d; grid-column: 1 / -1;">
+                    <i class="fas fa-trophy" style="font-size: 3rem; color: #bdc3c7; margin-bottom: 20px;"></i>
+                    <h3 style="margin-bottom: 10px; color: #5d6d7e;">کتابی یافت نشد</h3>
+                    <p>هنوز کتاب امتیازی وجود ندارد</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="books-section">
+            <div class="section-header">
+                <div class="section-title-group">
+                    <i class="fas fa-tags section-icon"></i>
+                    <h2 class="section-title">محبوب‌ترین ژانرها</h2>
+                </div>
+                <a href="#" class="view-all-btn">
+                    مشاهده همه
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+            </div>
+
+            <div class="featured-grid">
+                {% for genre in popular_genres %}
+                <div class="featured-item" onclick="location.href='{% url "books:search" %}?genre={{ genre.slug }}'">
+                    <i class="fas fa-bookmark featured-icon"></i>
+                    <h3 class="featured-title">{{ genre.name }}</h3>
+                    <p class="featured-count">{{ genre.books_count }} کتاب</p>
+                </div>
+                {% empty %}
+                <div style="text-align: center; padding: 60px 20px; color: #7f8c8d; grid-column: 1 / -1;">
+                    <i class="fas fa-tags" style="font-size: 3rem; color: #bdc3c7; margin-bottom: 20px;"></i>
+                    <h3 style="margin-bottom: 10px; color: #5d6d7e;">ژانری یافت نشد</h3>
+                    <p>هنوز ژانری اضافه نشده است</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="books-section">
+            <div class="section-header">
+                <div class="section-title-group">
+                    <i class="fas fa-user-edit section-icon"></i>
+                    <h2 class="section-title">محبوب‌ترین نویسندگان</h2>
+                </div>
+                <a href="#" class="view-all-btn">
+                    مشاهده همه
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+            </div>
+
+            <div class="featured-grid">
+                {% for author in popular_authors %}
+                <div class="featured-item" onclick="location.href='{% url "books:search" %}?author={{ author.id }}'">
+                    <i class="fas fa-user-circle featured-icon"></i>
+                    <h3 class="featured-title">{{ author.first_name }} {{ author.last_name }}</h3>
+                    <p class="featured-count">{{ author.books_count }} کتاب</p>
+                </div>
+                {% empty %}
+                <div style="text-align: center; padding: 60px 20px; color: #7f8c8d; grid-column: 1 / -1;">
+                    <i class="fas fa-user-edit" style="font-size: 3rem; color: #bdc3c7; margin-bottom: 20px;"></i>
+                    <h3 style="margin-bottom: 10px; color: #5d6d7e;">نویسنده‌ای یافت نشد</h3>
+                    <p>هنوز نویسنده‌ای اضافه نشده است</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        document.querySelectorAll('.view-all-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.style.opacity = '0.7';
+            });
+        });
+    </script>
+</body>
+</html>
